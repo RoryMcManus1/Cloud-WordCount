@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>WebWordCount</title>
+
+    <script type="text/javascript">
+
+        let result = 0;
+        let paragraph = '';
+        let word = '';
+
+
+
+        let checkURL = "http://check.40132363.qpc.hal.davecutting.uk/";
+        let countURL = "http://wordcount.40132363.qpc.hal.davecutting.uk/";
+        let freqURL = "http://freq.40132363.qpc.hal.davecutting.uk/";
+
+
+        function Display() {
+            if (result == 1)
+                result = 'Keyword exists!';
+            else
+                result = 'Keyword does not exist!';
+            document.getElementById('display-2').value = result;
+
+        }
+
+
+        function Clear() {
+            document.getElementById('paragraph').value = '';
+            document.getElementById('word').value = '';
+            document.getElementById('paragraph').placeholder = 'Enter the paragraph here..';
+            document.getElementById('word').placeholder = 'Enter the keyword here..';
+            document.getElementById('display-1').value = '';
+            document.getElementById('display-2').value = '';
+            document.getElementById('display-3').value = '';
+            document.getElementById('display-1').placeholder = 'Total word count = 0';
+            document.getElementById('display-2').placeholder = 'Check keyword appearance?';
+            document.getElementById('display-3').placeholder = 'Total keyword appearances?';
+
+        } function errormessage1() {
+            paragraph = document.getElementById('paragraph').value
+            if (paragraph == "") {
+                document.getElementById('paragraph').placeholder = 'Paragraph is required!!!'
+            }
+        }
+
+        function errormessage2() {
+            paragraph = document.getElementById('paragraph').value
+            word = document.getElementById('word').value
+            if (paragraph == "" && word == "") {
+                document.getElementById('paragraph').placeholder = 'Paragraph is required!!!'
+                document.getElementById('word').placeholder = 'Keyword is required!!!'
+                document.getElementById('display-2').placeholder = 'Paragraph & Keyword are required!!!'
+
+            } if (paragraph !== "" && word == "") {
+                document.getElementById('word').placeholder = 'Keyword is required!!!'
+                document.getElementById('display-2').placeholder = 'Keyword is required!!!'
+            }
+
+
+        }
+        function errormessage3() {
+            paragraph = document.getElementById('paragraph').value
+            word = document.getElementById('word').value
+            if (paragraph == "" && word == "") {
+                document.getElementById('paragraph').placeholder = 'Paragraph is required!!!'
+                document.getElementById('word').placeholder = 'Keyword is required!!!'
+                document.getElementById('display-3').placeholder = 'Paragraph & Keyword are required!!!'
+
+            } if (paragraph !== "" && word == "") {
+                document.getElementById('word').placeholder = 'Keyword is required!!!'
+                document.getElementById('display-3').placeholder = 'Keyword is required!!!'
+            }
+
+
+        }
+
+
+        function Check() {
+            paragraph = document.getElementById('paragraph').value
+            word = document.getElementById('word').value
+
+            if (paragraph == "" && word !== "") {
+                document.getElementById('paragraph').placeholder = 'Paragraph is required!!!'
+                document.getElementById('word').placeholder = 'Paragraph is required!!!'
+                document.getElementById('display-2').placeholder = 'Paragraph is required!!!'
+            } else {
+
+                let xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = function () {
+                    if (this.readyState == 4 && this.status == 200) {
+                        var j = JSON.parse(this.response);
+                        result = j.answer;
+                        Display();
+                    }
+                };
+
+                xhttp.open("GET", checkURL + "?paragraph=" + paragraph + "&word=" + word);
+                xhttp.send();
+                errormessage2();
+                return;
+
+
+            }
+        }
+        function Count() {
+            paragraphCount = document.getElementById('paragraph').value
+
+            errormessage1();
+
+            if (paragraph == "") {
+                document.getElementById('display-1').placeholder = 'Paragraph is required!!!'
+            } else {
+
+                let xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = function () {
+                    if (this.readyState == 4 && this.status == 200) {
+                        var k = JSON.parse(this.response);
+                        result = k.answer;
+                        document.getElementById('display-1').value = 'Total Word count = ' + result;
+                    }
+                };
+
+                xhttp.open("GET", countURL + "?paragraph=" + paragraphCount);
+                xhttp.send();
+
+                return;
+            }
+
+        }
+        function Freq() {
+            paragraphfreq = document.getElementById('paragraph').value
+            wordfreq = document.getElementById('word').value
+
+            errormessage3();
+
+
+            if (paragraph == "" && word !== "") {
+                document.getElementById('paragraph').placeholder = 'Paragraph is required!!!'
+                document.getElementById('word').placeholder = 'Paragraph is required!!!'
+                document.getElementById('display-3').placeholder = 'Paragraph is required!!!'
+            } else {
+
+                let xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = function () {
+                    if (this.readyState == 4 && this.status == 200) {
+                        var l = JSON.parse(this.response);
+                        result = l.answer;
+                        document.getElementById('display-3').value = 'Total KeyWord Appearances : ' + result;
+                    }
+
+                };
+
+                xhttp.open("GET", freqURL + "?paragraph=" + paragraphfreq + "&word=" + wordfreq);
+                xhttp.send();
+
+                return;
+            }
+
+        }
+
+
+
+    </script>
+
+    <style type="text/css">
+        body {
+            font-size: 150%;
+            font-family: monospace;
+        }
+
+        #logo {
+            font-family: Calibri, sans-serif;
+            font-weight: lighter;
+            color: #505050;
+            margin: 0.5em;
+        }
+
+        #wordcount {
+            text-align: center;
+            margin-top: 1em;
+        }
+
+        #paragraph {
+            font-size: 90%;
+            padding: 0.2em;
+            margin: 0.2em;
+            font-family: monospace;
+            letter-spacing: 0.1em;
+            border: 1px solid black;
+
+        }
+
+        #word {
+            font-size: 90%;
+            border: 1px solid black;
+            padding: 0.2em;
+            margin: 0.2em;
+            font-family: monospace;
+            letter-spacing: 0.1em;
+            width: 400px;
+
+        }
+
+        .display {
+            font-size: 90%;
+            color: white;
+            background-color: black;
+            padding: 0.2em;
+            margin: 0.2em;
+            font-family: monospace;
+            letter-spacing: 0.1em;
+            width: 400px;
+
+        }
+
+        .wwcbutton {
+            background-color: green;
+            color: white;
+            padding: 0px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 18px;
+            margin: 4px 2px;
+            cursor: pointer;
+            height: 40px;
+            width: 400px;
+        }
+
+        .wwcbutton-inactive {
+            background-color: gray;
+            color: white;
+            padding: 0px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 18px;
+            margin: 4px 2px;
+            cursor: pointer;
+            height: 40px;
+            width: 400px;
+        }
+
+        .wwcbutton-clear {
+            background-color: red;
+            color: white;
+            padding: 0px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 18px;
+            margin: 4px 2px;
+            cursor: pointer;
+            height: 40px;
+            width: 400px;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div id="wordcount">
+        <div id="logo">
+            Web Word Count App
+        </div>
+        <div>
+            <textarea id="paragraph" rows="5" cols="35" placeholder="Enter the paragraph here..."></textarea>
+        </div>
+        <div>
+            <input type="text" id="word" placeholder="Enter the keyword here..." value="">
+        </div>
+        <div>
+            <input type="text" class="display" id="display-1" readonly=1 placeholder="Total word count"
+                value=""><br>
+            <input type="text" class="display" id="display-2" readonly=1 placeholder="Keyword Exists?"
+                value=""><br>
+            <input type="text" class="display" id="display-3" readonly=1 placeholder="Total keyword appearances?"
+                value="">
+        </div>
+        <div>
+            <button class="wwcbutton" onclick="Count();">Total words?</button>
+        </div>
+        <div>
+            <button class="wwcbutton" onclick="Check();">Check keyword appearance</button>
+        </div>
+        <div>
+            <button class="wwcbutton" onclick="Freq();">Total keyword appearances?</button>
+        </div>
+        <div>
+            <button class="wwcbutton-clear" onclick="Clear();">Clear</button>
+        </div>
+
+    </div>
+</body>
+
+<script type="text/javascript">
+</script>
+
+</html>
